@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Redirect;
 
 class LoginController extends Controller
 {
@@ -23,9 +24,9 @@ class LoginController extends Controller
 
     public function login(Request $request){
         if($request->email == 'admin' && $request->password == '123456'){
-            return view('dashboard');
+            return Redirect::route('dashboard');
         }else{
-            return view('auth.login');
+            return Redirect::route('login');
         }
     }
 
