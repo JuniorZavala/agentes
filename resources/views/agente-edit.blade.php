@@ -2,26 +2,14 @@
 
 @section('title', 'Agentes - Editar')
 
-@push('page-scripts')
-    <script>
-       let inputFile = document.querySelector('#seleccionArchivos');
-       inputFile.addEventListener('change', function(){
-            console.log('esta funcionando');
-       });
-    </script>
-@endpush
 
 @section('content')
     <div class="container">
-        <form class="row p-3" action="" method="post" enctype="multipart/form-data">
+        <form class="row p-3" action="{{ route('agente-update', $agente) }}" method="post" enctype="multipart/form-data">@csrf
             <div class="col col-md-4 mb-3">
                 <div>
                     <div class="mb-4 d-flex justify-content-center">
-                        <img src="{{ $agente->foto }}" style="width: 300px; height: 320px;" />
-                    </div>
-                    <div class="d-flex justify-content-center">
-                            <input type="file" id="seleccionArchivos">
-                            <!--<img id="imagenPrevisualizacion">-->
+                        <img src="{{ $agente->foto }}" style="width: 340px; height: 355px;" />
                     </div>
                 </div>
             </div>
@@ -29,36 +17,41 @@
                 <div>
                     <div class="row g-3 mb-4">
                         <div class="col">
-                            <input type="text" class="form-control" value="{{ $agente->nombre }}">
+                            <input type="text" class="form-control" value="{{ $agente->nombre }}" name="nombre">
                         </div>
                     </div>
                     <div class="row g-3 mb-4">
                         <div class="col">
-                            <input type="text" class="form-control" value="{{ $agente->apellido }}">
+                            <input type="text" class="form-control" value="{{ $agente->apellido }}" name="apellido">
                         </div>
                     </div>
                     <div class="row g-3 mb-4">
                         <div class="col">
-                            <input type="text" class="form-control" value="{{ $agente->dni }}">
+                            <input type="text" class="form-control" value="{{ $agente->dni }}" name="dni">
                         </div>
                         <div class="col">
-                            <input type="text" class="form-control" value="{{ $agente->cod_socio }}">
+                            <input type="text" class="form-control" value="{{ $agente->cod_socio }}" name="cod_socio">
                         </div>
                     </div>
                     <div class="row g-3 mb-4">
                         <div class="col">
-                            <input type="text" class="form-control" value="{{ $agente->telefono }}">
+                            <input type="text" class="form-control" value="{{ $agente->telefono }}" name="telefono">
                         </div>
                         <div class="col">
-                            <select class="form-select" id="empresa">
+                            <select class="form-select" id="empresa" name="empresa_id">
                                 @foreach ($empresas as $empresa)
-                                    <option value="{{ $empresa->id }}">{{ $empresa->razon_social }}</option>
+                                    <option @selected($empresa->id == $agente->empresa_id) value="{{ $empresa->id }}">{{ $empresa->razon_social }}</option>
                                 @endforeach
-
                             </select>
                         </div>
                     </div>
-                    <a href="" class="btn btn-primary me-2">Guardar cambios</a>
+                    <div class="row g-3 mb-4">
+                        <div class="col">
+                            <label for="seleccionArchivos" class="form-label">*Actualizar Imagen</label>
+                            <input type="file" class="form-control" id="seleccionArchivos" accept="image/*" name="foto">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary me-2">Guardar cambios</button>
                     <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">Cancelar</a>
                 </div>
             </div>

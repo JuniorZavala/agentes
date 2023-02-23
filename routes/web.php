@@ -22,7 +22,8 @@ Route::get('/', function () {
 
 Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::get('dashboard',[AgentesController::class,'mostrarAgentes'])->name('dashboard');
-Route::get('agentes/{agente}',[AgentesController::class,'show'])->name('agente-edit');
+Route::get('agentes/{agente}/edit',[AgentesController::class,'edit'])->name('agente-edit');
+Route::post('agentes/{agente}',[AgentesController::class,'update'])->name('agente-update');
 
 Auth::routes();
 
