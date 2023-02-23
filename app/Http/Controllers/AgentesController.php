@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agentes;
+use App\Models\Empresas;
 use Illuminate\Http\Request;
 
 class AgentesController extends Controller
@@ -13,7 +14,8 @@ class AgentesController extends Controller
    }
 
    public function show(Agentes $agente){
-    return view('agente-edit',['agente' => $agente]);
+    $empresas = Empresas::all();
+    return view('agente-edit',['agente' => $agente, 'empresas' => $empresas]);
    }
 
    /**

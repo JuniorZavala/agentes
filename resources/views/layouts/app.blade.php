@@ -84,4 +84,5 @@
         </main>
     </div>
 </body>
+    @stack('page-scripts')
 </html>

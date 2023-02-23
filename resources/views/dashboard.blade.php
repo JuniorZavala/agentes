@@ -2,7 +2,7 @@
 
 @section('title', 'Agentes - Dashboard')
 
-@section('page-script')
+@push('page-scripts')
 
     <script>
         const exampleModal = document.getElementById('exampleModal')
@@ -23,7 +23,7 @@
         });
     </script>
 
-@endsection
+@endpush
 
 @section('content')
     <div class="container">
