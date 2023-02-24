@@ -47,8 +47,8 @@
                     </div>
                     <div class="row g-3 mb-4">
                         <div class="col">
-                            <label for="seleccionArchivos" class="form-label">*Actualizar Imagen</label>
-                            <input type="file" class="form-control" id="seleccionArchivos" accept="image/*" name="foto">
+                            <label for="seleccionArchivos" class="form-label">*Actualizar Imagen en 350x350</label>
+                            <input type="file" class="form-control" id="seleccionArchivos" name="foto">
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary me-2">Guardar cambios</button>

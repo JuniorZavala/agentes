@@ -6,13 +6,15 @@ use App\Models\Agentes;
 use App\Models\Empresas;
 use Faker\Core\File;
 use Illuminate\Http\Request;
+use PhpParser\Node\Expr\Isset_;
 
 class AgentesController extends Controller
 {
     public function mostrarAgentes(Request $request)
     {
         $agentes = Agentes::with('empresa')->get();
-        return view('dashboard', ['agentes' => $agentes]);
+        $empresas = Empresas::all();
+        return view('dashboard', ['agentes' => $agentes, 'empresas' => $empresas]);
     }
 
     /**
@@ -49,24 +51,21 @@ class AgentesController extends Controller
      */
     public function update(Agentes $agente, Request $request)
     {
-        $file = $request->file('foto');
-        $fileModel = new File;
-        if($request->file()) {
-            dd($fileModel);
-            $fileName = time().'_'.$request->file->getClientOriginalName();
-            $filePath = $request->file('file')->storeAs('uploads', $fileName, 'public');
-            $fileModel->name = time().'_'.$request->file->getClientOriginalName();
-            $fileModel->file_path = '/storage/' . $filePath;
-            $fileModel->save();
-            return back()
-            ->with('success','File has been uploaded.')
-            ->with('file', $fileName);
+        $data = $request->all();
+        if ($request->file('foto')) {
+            if (isset($agente->foto)) {
+                $pathfile = explode("/", $agente->foto, 4)[3];
+                $this->destroyFile($pathfile);
+            }
+            $data['foto'] = $this->loadFile($request, 'foto', 'users');
         }
-        $agente->empresa_id = (integer) $request->empresa_id;
-        $agente->update($request->all());
+        // $data['empresa_id'] = (integer) $request->empresa_id;
+        $agente->update($data);
         $agentes = Agentes::with('empresa')->get();
-        return view('dashboard', ['agentes' => $agentes])->with('success', 'El agente se edito correctamente');
+        $empresas = Empresas::all();
+        return view('dashboard', ['agentes' => $agentes, 'empresas' => $empresas])->with('success', 'El agente se edito correctamente');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -74,8 +73,16 @@ class AgentesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Agentes $agente)
     {
-        //
+        $agente->delete();
+        return redirect('dashboard');
+    }
+
+
+    public function store(Request $request)
+    {
+        Agentes::create($request->all());
+        return redirect('dashboard');
     }
 }

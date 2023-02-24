@@ -41,39 +41,48 @@
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form>
+                                <form action="{{ route('agente-store') }}" method="post" enctype="multipart/form-data">@csrf
                                     <div class="row g-3 mb-3">
                                         <div class="col">
-                                            <input type="text" class="form-control" placeholder="Nombres">
+                                            <input type="text" class="form-control" placeholder="Nombres" name="nombre">
                                         </div>
                                     </div>
                                     <div class="row g-3 mb-3">
                                         <div class="col">
-                                            <input type="text" class="form-control" placeholder="Apellidos">
+                                            <input type="text" class="form-control" placeholder="Apellidos" name="apellido">
                                         </div>
                                         <div class="col">
-                                            <input type="text" class="form-control" placeholder="DNI / C.E">
+                                            <input type="text" class="form-control" placeholder="DNI / C.E" name="dni">
                                         </div>
                                     </div>
                                     <div class="row g-3 mb-3">
                                         <div class="col">
-                                            <input type="text" class="form-control" placeholder="Código de Agente">
+                                            <input type="text" class="form-control" placeholder="Código de Agente" name="cod_socio">
                                         </div>
                                         <div class="col">
-                                            <input type="text" class="form-control" placeholder="Teléfono">
+                                            <input type="text" class="form-control" placeholder="Teléfono" name="telefono">
+                                        </div>
+                                    </div>
+                                    <div class="row g-3 mb-3">
+                                        <div class="col">
+                                            <select class="form-select" id="empresa" name="empresa_id">
+                                                @foreach ($empresas as $empresa)
+                                                    <option value="{{ $empresa->id }}">{{ $empresa->razon_social }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="row g-3 mb-3">
                                         <div class="col">
                                             <label class="blockquote-footer mb-2">Cargar foto en 320x400</label>
-                                            <input type="file" class="form-control" id="inputGroupFile02">
+                                            <input type="file" class="form-control" id="inputGroupFile02" name="foto">
                                         </div>
                                     </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="submit" class="btn btn-primary">Agregar</button>
+                                    </div>
                                 </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                <button type="button" class="btn btn-primary">Agregar</button>
                             </div>
                         </div>
                     </div>
@@ -133,7 +142,7 @@
                                     <a href="{{ route('agente-edit', $agente) }}" class="ms-3 btn btn-icon btn-primary">
                                         <i class="far fa-edit"></i>
                                     </a>
-                                    <a href="#" class="ms-3 btn btn-icon btn-danger">
+                                    <a href="{{ route('agente-destroy', $agente) }}" class="ms-3 btn btn-icon btn-danger">
                                         <i class="far fa-trash-alt"></i>
                                     </a>
                                 </td>
