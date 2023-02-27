@@ -9,7 +9,7 @@
             <div class="col col-md-4 mb-3">
                 <div>
                     <div class="mb-4 d-flex justify-content-center">
-                        <img src="{{ $agente->foto }}" style="width: 340px; height: 355px;" />
+                        <img src="{{ Storage::url($agente->foto) }}" style="width: 340px; height: 355px;" />
                     </div>
                 </div>
             </div>

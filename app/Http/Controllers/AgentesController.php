@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Faker\Core\File;
 use App\Models\Agentes;
 use App\Models\Empresas;
-use Faker\Core\File;
 use Illuminate\Http\Request;
 use PhpParser\Node\Expr\Isset_;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class AgentesController extends Controller
 {
@@ -52,15 +54,27 @@ class AgentesController extends Controller
     public function update(Agentes $agente, Request $request)
     {
         $data = $request->all();
-        if ($request->file('foto')) {
-            if (isset($agente->foto)) {
-                $pathfile = explode("/", $agente->foto, 4)[3];
-                $this->destroyFile($pathfile);
-            }
-            $data['foto'] = $this->loadFile($request, 'foto', 'users');
+
+        // Update photo
+        if ($request->hasFile('foto')) {
+            Storage::delete($agente->foto);
+
+            $path = $request->file('foto')->store('users');
+
+            $agente->update([
+                'foto' => $path,
+            ]);
         }
-        // $data['empresa_id'] = (integer) $request->empresa_id;
-        $agente->update($data);
+        // Update data
+        $agente->update([
+            'nombre' => $request->nombre,
+            'apellido' => $request->apellido,
+            'dni' => $request->dni,
+            'cod_socio' => $request->cod_socio,
+            'telefono' => $request->telefono,
+            'empresa_id' => $request->empresa_id,
+        ]);
+
         $agentes = Agentes::with('empresa')->get();
         $empresas = Empresas::all();
         return view('dashboard', ['agentes' => $agentes, 'empresas' => $empresas])->with('success', 'El agente se edito correctamente');
@@ -82,7 +96,18 @@ class AgentesController extends Controller
 
     public function store(Request $request)
     {
-        Agentes::create($request->all());
-        return redirect('dashboard');
+        $path = $request->file('foto')->store('users');
+
+        Agentes::create([
+            'foto' => $path,
+            'nombre' => $request->nombre,
+            'apellido' => $request->apellido,
+            'dni' => $request->dni,
+            'cod_socio' => $request->cod_socio,
+            'telefono' => $request->telefono,
+            'empresa_id' => $request->empresa_id,
+
+        ]);
+        return redirect()->back();
     }
 }

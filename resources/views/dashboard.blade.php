@@ -3,8 +3,10 @@
 @section('title', 'Agentes - Dashboard')
 
 @push('page-scripts')
-
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
     <script>
+
         const exampleModal = document.getElementById('exampleModal')
         exampleModal.addEventListener('show.bs.modal', event => {
             // Button that triggered the modal
@@ -21,8 +23,47 @@
             modalTitle.textContent = `New message to ${recipient}`
             modalBodyInput.value = recipient
         });
-    </script>
 
+
+        jQuery(document).ready(function() {
+            jQuery('#SubmitForm').click(function(e) {
+                e.preventDefault();
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                jQuery.ajax({
+                    url: "{{ url('agente-create') }}",
+                    method: 'post',
+                    data: {
+                        nombre: jQuery('#nombre').val(),
+                        apellido: jQuery('#apellido').val(),
+                        dni: jQuery('#dni').val(),
+                        cod_socio: jQuery('#cod_socio').val(),
+                        telefono: jQuery('#telefono').val(),
+                        empresa: jQuery('#empresa').val(),
+                        foto: jQuery('#foto').val(),
+                    },
+                    success: function(result) {
+                        if (result.errors) {
+                            jQuery('.alert-danger').html('');
+
+                            jQuery.each(result.errors, function(key, value) {
+                                jQuery('.alert-danger').show();
+                                jQuery('.alert-danger').append('<li>' + value +
+                                    '</li>');
+                            });
+                        } else {
+                            jQuery('.alert-danger').hide();
+                            $('#open').hide();
+                            $('#myModal').modal('hide');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 @endpush
 
 @section('content')
@@ -41,33 +82,40 @@
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form action="{{ route('agente-store') }}" method="post" enctype="multipart/form-data">@csrf
+
+                                <form name="SubmitForm" enctype="multipart/form-data" action="{{route('agente-store')}}" method="POST">@csrf
                                     <div class="row g-3 mb-3">
                                         <div class="col">
-                                            <input type="text" class="form-control" placeholder="Nombres" name="nombre">
+                                            <input type="text" class="form-control" placeholder="Nombres" name="nombre"
+                                                id="nombre">
                                         </div>
                                     </div>
                                     <div class="row g-3 mb-3">
                                         <div class="col">
-                                            <input type="text" class="form-control" placeholder="Apellidos" name="apellido">
+                                            <input type="text" class="form-control" placeholder="Apellidos"
+                                                name="apellido" id="apellido">
                                         </div>
                                         <div class="col">
-                                            <input type="text" class="form-control" placeholder="DNI / C.E" name="dni">
+                                            <input type="text" class="form-control" placeholder="DNI / C.E"
+                                                name="dni" id="dni">
                                         </div>
                                     </div>
                                     <div class="row g-3 mb-3">
                                         <div class="col">
-                                            <input type="text" class="form-control" placeholder="Código de Agente" name="cod_socio">
+                                            <input type="text" class="form-control" placeholder="Código de Agente"
+                                                name="cod_socio" id="cod_socio">
                                         </div>
                                         <div class="col">
-                                            <input type="text" class="form-control" placeholder="Teléfono" name="telefono">
+                                            <input type="text" class="form-control" placeholder="Teléfono"
+                                                name="telefono" id="telefono">
                                         </div>
                                     </div>
                                     <div class="row g-3 mb-3">
                                         <div class="col">
                                             <select class="form-select" id="empresa" name="empresa_id">
                                                 @foreach ($empresas as $empresa)
-                                                    <option value="{{ $empresa->id }}">{{ $empresa->razon_social }}</option>
+                                                    <option value="{{ $empresa->id }}">{{ $empresa->razon_social }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -75,12 +123,13 @@
                                     <div class="row g-3 mb-3">
                                         <div class="col">
                                             <label class="blockquote-footer mb-2">Cargar foto en 320x400</label>
-                                            <input type="file" class="form-control" id="inputGroupFile02" name="foto">
+                                            <input type="file" class="form-control" id="foto" name="foto">
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                        <button type="submit" class="btn btn-primary">Agregar</button>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Cerrar</button>
+                                        <input type="submit" class="btn btn-primary" value="Agregar">
                                     </div>
                                 </form>
                             </div>
@@ -107,7 +156,8 @@
                         </div>
                     </div>
                     <div class="col-auto">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Buscar agente</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Buscar
+                            agente</button>
                     </div>
                 </form>
             </div>
@@ -142,7 +192,8 @@
                                     <a href="{{ route('agente-edit', $agente) }}" class="ms-3 btn btn-icon btn-primary">
                                         <i class="far fa-edit"></i>
                                     </a>
-                                    <a href="{{ route('agente-destroy', $agente) }}" class="ms-3 btn btn-icon btn-danger">
+                                    <a href="{{ route('agente-destroy', $agente) }}"
+                                        class="ms-3 btn btn-icon btn-danger">
                                         <i class="far fa-trash-alt"></i>
                                     </a>
                                 </td>

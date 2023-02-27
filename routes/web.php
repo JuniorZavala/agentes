@@ -22,10 +22,10 @@ Route::get('/', function () {
 
 Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::get('dashboard',[AgentesController::class,'mostrarAgentes'])->name('dashboard');
+Route::post('agentes/store',[AgentesController::class,'store'])->name('agente-store');
 Route::get('agentes/{agente}/edit',[AgentesController::class,'edit'])->name('agente-edit');
 Route::post('agentes/{agente}',[AgentesController::class,'update'])->name('agente-update');
 Route::get('agentes/{agente}',[AgentesController::class,'destroy'])->name('agente-destroy');
-Route::post('agentes/store',[AgentesController::class,'store'])->name('agente-store');
 
 Auth::routes();
 
