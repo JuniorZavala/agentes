@@ -5,6 +5,9 @@
 
 @section('content')
     <div class="container">
+
+    <!-- Form Editar Agente -->
+
         <form class="row p-3" action="{{ route('agente-update', $agente) }}" method="post" enctype="multipart/form-data">@csrf
             <div class="col col-md-4 mb-3">
                 <div>
@@ -40,7 +43,8 @@
                         <div class="col">
                             <select class="form-select" id="empresa" name="empresa_id">
                                 @foreach ($empresas as $empresa)
-                                    <option @selected($empresa->id == $agente->empresa_id) value="{{ $empresa->id }}">{{ $empresa->razon_social }}</option>
+                                    <option @selected($empresa->id == $agente->empresa_id) value="{{ $empresa->id }}">
+                                        {{ $empresa->razon_social }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -56,9 +60,9 @@
                 </div>
             </div>
         </form>
+
+    <!-- Form Editar Agente -->
+
     </div>
 
 @endsection
-
-
-

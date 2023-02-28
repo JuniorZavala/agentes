@@ -22,6 +22,7 @@ Route::get('/', function () {
 
 Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::get('dashboard',[AgentesController::class,'mostrarAgentes'])->name('dashboard');
+Route::get('search',[AgentesController::class,'search'])->name('agente-search');
 Route::post('agentes/store',[AgentesController::class,'store'])->name('agente-store');
 Route::get('agentes/{agente}/edit',[AgentesController::class,'edit'])->name('agente-edit');
 Route::post('agentes/{agente}',[AgentesController::class,'update'])->name('agente-update');

@@ -93,6 +93,12 @@ class AgentesController extends Controller
         return redirect('dashboard');
     }
 
+    /**
+     * create agentes.
+     *
+     * @param  int  Request $request
+     * @return \Illuminate\Http\Response
+     */
 
     public function store(Request $request)
     {
@@ -110,4 +116,30 @@ class AgentesController extends Controller
         ]);
         return redirect()->back();
     }
+
+    /**
+     * search agentes.
+     *
+     * @param  int  Request $request
+     * @return \Illuminate\Http\Response
+     */
+
+    public function search(Request $request){
+
+        $empresas = Empresas::all();
+
+        if ($request->filled('dni')) {
+            $agentes = Agentes::where('dni','LIKE','%'. $request->dni.'%')->paginate(2);
+            return view('dashboard', ['agentes' => $agentes, 'empresas' => $empresas]);
+        }else if($request->filled('cod_socio')){
+            $agentes = Agentes::where('cod_socio','LIKE','%'. $request->cod_socio.'%')->paginate(2);
+            return view('dashboard', ['agentes' => $agentes, 'empresas' => $empresas]);
+        }else{
+            return view('dashboard')->with('success', 'no se encontro ningún resultado');
+        }
+
+
+
+    }
+
 }

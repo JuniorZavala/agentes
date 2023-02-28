@@ -6,7 +6,6 @@
     <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
     <script>
-
         const exampleModal = document.getElementById('exampleModal')
         exampleModal.addEventListener('show.bs.modal', event => {
             // Button that triggered the modal
@@ -14,8 +13,6 @@
             // Extract info from data-bs-* attributes
             const recipient = button.getAttribute('data-bs-whatever')
             // If necessary, you could initiate an AJAX request here
-            // and then do the updating in a callback.
-            //
             // Update the modal's content.
             const modalTitle = exampleModal.querySelector('.modal-title')
             const modalBodyInput = exampleModal.querySelector('.modal-body input')
@@ -23,45 +20,23 @@
             modalTitle.textContent = `New message to ${recipient}`
             modalBodyInput.value = recipient
         });
+    </script>
 
+    <script>
+        const exampleModal2 = document.getElementById('exampleModal2')
+        exampleModal2.addEventListener('show.bs.modal2', event => {
+            console.log('sdsa');
+            // Button that triggered the modal
+            const button = event.relatedTarget
+            // Extract info from data-bs-* attributes
+            const recipient = button.getAttribute('data-bs-whatever')
+            // If necessary, you could initiate an AJAX request here
+            // Update the modal's content.
+            const modalTitle = exampleModal.querySelector('.modal-title')
+            const modalBodyInput = exampleModal.querySelector('.modal-body input')
 
-        jQuery(document).ready(function() {
-            jQuery('#SubmitForm').click(function(e) {
-                e.preventDefault();
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                jQuery.ajax({
-                    url: "{{ url('agente-create') }}",
-                    method: 'post',
-                    data: {
-                        nombre: jQuery('#nombre').val(),
-                        apellido: jQuery('#apellido').val(),
-                        dni: jQuery('#dni').val(),
-                        cod_socio: jQuery('#cod_socio').val(),
-                        telefono: jQuery('#telefono').val(),
-                        empresa: jQuery('#empresa').val(),
-                        foto: jQuery('#foto').val(),
-                    },
-                    success: function(result) {
-                        if (result.errors) {
-                            jQuery('.alert-danger').html('');
-
-                            jQuery.each(result.errors, function(key, value) {
-                                jQuery('.alert-danger').show();
-                                jQuery('.alert-danger').append('<li>' + value +
-                                    '</li>');
-                            });
-                        } else {
-                            jQuery('.alert-danger').hide();
-                            $('#open').hide();
-                            $('#myModal').modal('hide');
-                        }
-                    }
-                });
-            });
+            modalTitle.textContent = `New message to ${recipient}`
+            modalBodyInput.value = recipient
         });
     </script>
 @endpush
@@ -69,7 +44,8 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center mb-4">
-            <div class="col-md-5">
+            <!-- Modal agregar Agente -->
+            <div class="col-md-4">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
                     data-bs-whatever="@mdo"><i class="far fa-paper-plane"></i> Agregar agente</button>
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -82,8 +58,8 @@
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-
-                                <form name="SubmitForm" enctype="multipart/form-data" action="{{route('agente-store')}}" method="POST">@csrf
+                                <form name="SubmitForm" enctype="multipart/form-data" action="{{ route('agente-store') }}"
+                                    method="POST">@csrf
                                     <div class="row g-3 mb-3">
                                         <div class="col">
                                             <input type="text" class="form-control" placeholder="Nombres" name="nombre"
@@ -137,13 +113,16 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-7">
-                <form class="row gy-2 gx-3 align-items-center float-right">
+            <!-- End Modal agregar Agente -->
+            <!-- Buscar Agente -->
+            <div class="col-md-8">
+                <form class="row gy-2 gx-3 align-items-center float-right" enctype="multipart/form-data"
+                    action="{{ route('agente-search') }}">@csrf
                     <div class="col-auto">
                         <label class="visually-hidden" for="autoSizingInputGroup">dni</label>
                         <div class="input-group">
                             <div class="input-group-text"><i class="fas fa-id-card"></i></div>
-                            <input type="text" class="form-control" id="autoSizingInputGroup"
+                            <input type="text" class="form-control" id="dni" name="dni"
                                 placeholder="Ingresar DNI / C.E">
                         </div>
                     </div>
@@ -151,19 +130,22 @@
                         <label class="visually-hidden" for="autoSizingInputGroup">cod. agente</label>
                         <div class="input-group">
                             <div class="input-group-text"><i class="fa fa-clipboard-user"></i></div>
-                            <input type="text" class="form-control" id="autoSizingInputGroup"
+                            <input type="text" class="form-control" id="cod_socio" name="cod_socio"
                                 placeholder="Código de agente">
                         </div>
                     </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Buscar
                             agente</button>
+                        <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary ms-3">Limpiar</a>
                     </div>
                 </form>
             </div>
+            <!-- End Buscar Agente -->
         </div>
         <div class="row justify-content-center">
             <div class="col-md-12">
+                <!-- Table Main Agente -->
                 <table class="table text-center">
                     <thead class="table-dark">
                         <tr>
@@ -203,8 +185,37 @@
 
                     </tbody>
                 </table>
+                <!-- End Table Main Agente -->
             </div>
         </div>
+
+        <!-- Modal Mostrar Agente -->
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal2" data-bs-target="#exampleModal2">
+            Launch demo modal
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModal2Label"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModal2Label">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal2" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal2">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- End Modal Mostrar Agente -->
     </div>
 
 @endsection
